@@ -1,9 +1,13 @@
-from selenium.webdriver.common.by import By
+from base.selenium_driver import SeleniumDriver
+import logging
+import utilities.custom_logger as cl
 
+class LoginPage(SeleniumDriver):
 
-class LoginPage():
+    log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
+        super().__init__(driver)
         self.driver = driver
 
     # Locators
@@ -12,40 +16,21 @@ class LoginPage():
     _password_field = "user_password"
     _login_button = "commit"
 
-    def get_login_link(self):
-        return self.driver.find_element(By.LINK_TEXT, self._login_link)
-
-    def get_email_field(self):
-        return self.driver.find_element(By.ID, self._email_field)
-
-    def get_password_field(self):
-        return self.driver.find_element(By.ID, self._password_field)
-
-    def get_login_button(self):
-        return self.driver.find_element(By.NAME, self._login_button)
-
     def click_login_link(self):
-        self.get_login_link().click()
+        self.element_click(self._login_link, locator_type="link")
 
     def enter_email(self, email):
-        self.get_email_field().send_keys(email)
+        self.send_my_keys(self._email_field, email)
 
     def enter_password(self, password):
-        self.get_password_field().send_keys(password)
+        self.send_my_keys(self._password_field, password)
 
     def click_login_button(self):
-        self.get_login_button().click()
+        self.element_click(self._login_button, locator_type="name")
 
-    def login(self, username, password):
-        loginLink = self.driver.find_element(By.LINK_TEXT, "Login")
-        loginLink.click()
-
-        emailField = self.driver.find_element(By.ID, "user_email")
-        emailField.send_keys(username)
-
-        passwordField = self.driver.find_element(By.ID, "user_password")
-        passwordField.send_keys(password)
-
-        loginButton = self.driver.find_element(By.NAME, "commit")
-        loginButton.click()
+    def login(self, email, password):
+        self.click_login_link()
+        self.enter_email(email)
+        self.enter_password(password)
+        self.click_login_button()
 
