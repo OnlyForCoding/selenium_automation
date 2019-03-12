@@ -2,8 +2,8 @@ from base.selenium_driver import SeleniumDriver
 import logging
 import utilities.custom_logger as cl
 
-class LoginPage(SeleniumDriver):
 
+class LoginPage(SeleniumDriver):
     log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
@@ -28,9 +28,19 @@ class LoginPage(SeleniumDriver):
     def click_login_button(self):
         self.element_click(self._login_button, locator_type="name")
 
-    def login(self, email, password):
+    def login(self, email="", password=""):
         self.click_login_link()
         self.enter_email(email)
         self.enter_password(password)
         self.click_login_button()
 
+    def verify_successful_login(self):
+        result = self.is_element_present("//*[@id='navbar']//a[contains(text(),'My Courses')]",
+                                         locator_type="xpath")
+        self.log.info("Is logged in successfully : " + str(result))
+        return result
+
+    def verify_login_failed(self):
+        result = self.is_element_present("//div[contains(text(),'Invalid email or password')]",
+                                         locator_type="xpath")
+        return result

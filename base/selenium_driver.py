@@ -18,7 +18,7 @@ class SeleniumDriver():
         if locator_type == "id":
             return By.ID
         elif locator_type == "name":
-            return By.XPATH
+            return By.NAME
         elif locator_type == "xpath":
             return By.XPATH
         elif locator_type == "css":
@@ -77,12 +77,12 @@ class SeleniumDriver():
             self.log.error("Element Not Found")
             return False
 
-    def wait_for_element(self, locator, locator_type="id",
-                       timeout=10, poll_frequency=0.5):
+    def wait_for_element_to_be_clickable(self, locator, locator_type="id",
+                                         timeout=10, poll_frequency=0.5):
         element = None
         try:
             byType = self.get_by_type(locator_type)
-            self.log.info("Waiting for maximum :: "+ str(timeout)+
+            self.log.info("Waiting for maximum :: " + str(timeout) +
                           " :: seconds for element to be clickable")
             wait = WebDriverWait(self.driver, timeout, poll_frequency,
                                  ignored_exceptions=[NoSuchElementException,
@@ -97,10 +97,9 @@ class SeleniumDriver():
 
     def send_my_keys(self, locator, data, locator_type="id"):
         try:
-            element = self.get_element(locator,locator_type)
+            element = self.get_element(locator, locator_type)
             element.send_keys(data)
             self.log.info("Send Data on element with locator: " + locator + " locatorType: " + locator_type)
         except:
             self.log.error("Cannot Send Data on the element with locator: " + locator + " locatorType: " + locator_type)
             print_stack()
-
